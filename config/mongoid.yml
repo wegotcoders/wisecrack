@@ -1,0 +1,7 @@
+development:
+  clients:
+    default:
+      database: mongoid
+      chunkSize: 512
+      hosts:
+        - localhost:27017

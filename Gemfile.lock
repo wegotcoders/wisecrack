@@ -2,9 +2,9 @@ GEM
   remote: https://rubygems.org/
   specs:
     backports (3.6.6)
-    bson (4.0.2)
-    mongo (2.2.3)
-      bson (~> 4.0)
+    bson (3.2.6)
+    mongo (2.0.6)
+      bson (~> 3.0)
     multi_json (1.11.2)
     rack (1.6.4)
     rack-protection (1.5.3)
@@ -31,3 +31,6 @@ DEPENDENCIES
   mongo
   sinatra
   sinatra-contrib
+
+BUNDLED WITH
+   1.10.6

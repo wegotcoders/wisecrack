@@ -21,15 +21,7 @@ end
 get '/video/:id' do
   content_type 'video/mp4'
 
-  begin
-    fs_bucket = settings.client.database.fs(:fs_name => 'fs')
-    file = Tempfile.new('video')
-    fs_bucket.download_to_stream(BSON::ObjectId(params[:id]), file)
-  rescue Mongo::Error::UnexpectedChunkLength => e
-    puts e.message
-  rescue Mongo::Error::ClosedStream => e
-    puts e.message
-  end
+  fs_bucket = settings.client.database.fs(:fs_name => 'fs')
 
   stream do |out|
     unless out.closed?
@@ -37,8 +29,9 @@ get '/video/:id' do
         fs_bucket.open_download_stream(BSON::ObjectId(params[:id])) do |video_stream|
           video_stream.each do |chunk|
             out << chunk
+            sleep 0.5
+            out.flush
           end
-          out.flush
         end
       rescue Mongo::Error::UnexpectedChunkLength => e
         puts e.message

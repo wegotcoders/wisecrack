@@ -3,16 +3,18 @@ require 'sinatra/streaming'
 require 'mongo'
 require 'pry'
 
-set :client, Mongo::Client.new([ '127.0.0.1:27017' ], :database => 'videos')
+set :client, Mongo::Client.new([ '127.0.0.1:27017' ], :database => 'elearning')
 
 post '/videos' do
   video = File.open(params[:video_path])
 
-  video_id = settings.client.database.fs.upload_from_stream('video.mp4', video, { chunk_size: 10240000 })
-  video.close
+  video_id = settings
+    .client
+    .database
+    .fs(bucket_name: 'videos')
+    .upload_from_stream('video.mp4', video)
 
-  # file = Mongo::Grid::File.new(video.read, :filename => 'video.mp4')
-  # video_id = settings.client.database.fs(:fs_name => 'videos').insert_one(file)
+  video.close
 
   content_type :json
   [201, {}, { video_id: video_id} ]
@@ -22,27 +24,27 @@ get '/videos/show.html' do
   erb :show
 end
 
-get '/videos/:id.:format' do
-  # TODO - Make this dynamic based on the filetype in gridfs..
-  content_type 'video/mp4'
-
-  # TODO - Make this dynamic based on the size of the file in gridfs
+get '/videos/:id' do
   headers \
-    'Content-Length' => '60317938'
+    'Content-Length' => '60317938',
+    'Content-Type' => "video/#{params[:file_extension]}"
+  fs_bucket = settings.client.database.fs(:fs_name => 'videos')
 
-  # TODO - Let's use videos as the fs_name
-  fs_bucket = settings.client.database.fs(:fs_name => 'fs')
+  @chunk_count = 0
+  @bigger_chunk = ""
 
   stream do |out|
     unless out.closed?
       begin
         fs_bucket.open_download_stream(BSON::ObjectId(params[:id])) do |video_stream|
           video_stream.each do |chunk|
-            out << chunk
-            # TODO - How best to regulate content? I'd like to be able to set
-            # bitrate to say 256k, 512k etc.
-            sleep 10
-            out.flush
+            @chunk_count += 1
+            @bigger_chunk << chunk
+            if @chunk_count == params[:chunk_factor].to_i
+              out << @bigger_chunk
+              @chunk_count = 0
+              @bigger_chunk = ""
+            end
           end
         end
       rescue Mongo::Error::UnexpectedChunkLength => e

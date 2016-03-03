@@ -20,10 +20,6 @@ post '/videos' do
   [201, {}, { video_id: video_id} ]
 end
 
-get '/videos/show.html' do
-  erb :show
-end
-
 get '/videos/:id' do
   headers \
     'Content-Length' => '60317938',
@@ -40,22 +36,12 @@ get '/videos/:id' do
           video_stream.each do |chunk|
             @chunk_count += 1
             @bigger_chunk << chunk
-            if @chunk_count == params[:chunk_factor].to_i
-              out << @bigger_chunk
-              @chunk_count = 0
+            if @chunk_count % params[:chunk_factor].to_i == 0 || video_stream.file_info.chunk_size > chunk.size
+              out << @bigger_chunk.to_s
               @bigger_chunk = ""
             end
           end
         end
-      rescue Mongo::Error::UnexpectedChunkLength => e
-        puts e.message
-        out.close
-      rescue Mongo::Error::ClosedStream => e
-        puts e.message
-        out.close
-      rescue IOError => e
-        puts e.message
-        out.close
       end
     end
   end

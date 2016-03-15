@@ -20,7 +20,7 @@ class ServerTest < MiniTest::Test
 
     get "/videos/#{id}", :file_extension => 'mp4', :chunk_factor => 10
     assert last_response.headers['Content-Type'] == "video/mp4"
-    assert last_response.headers['Content-Length'].to_i == test_file.size
+    assert last_response.headers['Content-Length'].to_i == test_file.size, "Expected Content Length to be #{test_file.size} was #{last_response.headers['Content-Length']}"
     assert last_response.ok?
   end
 end

@@ -11,8 +11,7 @@ post '/videos' do
     .client
     .database
     .fs(bucket_name: 'videos')
-    binding.pry
-    video_id.upload_from_stream('video.mp4', video)
+    .upload_from_stream('video.mp4', video)
 
   video.close
 
@@ -21,10 +20,12 @@ post '/videos' do
 end
 
 get '/videos/:id' do
-  headers \
-    'Content-Length' => '60317938',
-    'Content-Type' => "video/#{params[:file_extension]}"
   fs_bucket = settings.client.database.fs(:fs_name => 'videos')
+  content_length = fs_bucket.find(_id: BSON::ObjectId(params[:id])).first[:length]
+
+  headers \
+    'Content-Length' => content_length,
+    'Content-Type' => "video/#{params[:file_extension]}"
 
   @chunk_count = 0
   @bigger_chunk = ""

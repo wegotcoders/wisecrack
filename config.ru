@@ -1,2 +1,2 @@
-require 'wgc_cast/server'
+require 'wisecrack/server'
 run Sinatra::Application

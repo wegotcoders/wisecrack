@@ -1,11 +1,4 @@
-source "https://rubygems.org"
+source 'https://rubygems.org'
 
-gem "sinatra"
-gem "sinatra-contrib"
-gem "mongo"
-
-group :development do
-  gem "pry"
-  gem "minitest"
-  gem "rack-test"
-end
+# Specify your gem's dependencies in wgc_cast.gemspec
+gemspec

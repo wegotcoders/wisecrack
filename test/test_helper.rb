@@ -1,6 +1,7 @@
 ENV['RACK_ENV'] = 'test'
 
-require_relative '../server.rb'
+$LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
+require 'wgc_cast'
 
 require 'minitest/autorun'
 require 'rack/test'

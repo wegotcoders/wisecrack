@@ -7,6 +7,14 @@ class ServerTest < MiniTest::Test
     Sinatra::Application
   end
 
+  def setup
+    FileUtils.touch 'hr-preview.mp4'
+  end
+
+  def teardown
+    FileUtils.rm_f 'hr-preview.mp4'
+  end
+
   def test_video_upload_to_mongo
     post '/videos', :video_path => 'hr-preview.mp4'
     assert_equal last_response.status, 201

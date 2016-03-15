@@ -1,4 +1,4 @@
-module WgcCast::Video
+module Wisecrack::Video
   class UploadException < Exception; end
 
   class << self

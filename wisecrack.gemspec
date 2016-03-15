@@ -1,17 +1,17 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'wgc_cast/version'
+require 'wisecrack/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "wgc_cast"
-  spec.version       = WgcCast::VERSION
-  spec.authors       = ["Dan Garland"]
-  spec.email         = ["dan@dangarland.co.uk"]
+  spec.name          = "wisecrack"
+  spec.version       = Wisecrack::VERSION
+  spec.authors       = ["Dan Garland", "Alfred Oliver Willder"]
+  spec.email         = ["dan@dangarland.co.uk", "alfred.oliver.willder@gmail.com"]
 
   spec.summary       = %q{A simple video streaming server for HTML5}
   spec.description   = %q{A sinatra app that streams data out of Mongo GridFS}
-  spec.homepage      = "https://github.com/wegotcoders/wgc_cast"
+  spec.homepage      = "https://github.com/wegotcoders/wisecrack"
   spec.license       = "MIT"
 
   # Prevent pushing this gem to RubyGems.org by setting 'allowed_push_host', or

@@ -4,11 +4,11 @@ require 'mongo'
 require 'json'
 
 configure :development do
-  set :client, Mongo::Client.new(['127.0.0.1:27017'], :database => 'wgc_elearning_development')
+  set :client, Mongo::Client.new(['127.0.0.1:27017'], :database => 'wisecrack_development')
 end
 
 configure :production do
-  set :client, Mongo::Client.new(['127.0.0.1:27017'], :database => 'wgc_elearning_production')
+  set :client, Mongo::Client.new(['127.0.0.1:27017'], :database => 'wisecrack_production')
 end
 
 post '/videos' do

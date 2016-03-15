@@ -34,9 +34,10 @@ class ServerTest < MiniTest::Test
   def test_video_stream
     test_file = File.open('hr-preview-fast.mp4')
     post '/videos', :video_path => test_file.path
-    id = last_response.body.match(/'(.*?)'/).captures.last
+    id = JSON(last_response.body)["video_id"]
 
     get "/videos/#{id}-512.mp4"
+    assert_equal 200, last_response.status
     assert_equal "video/mp4", last_response.headers['Content-Type']
     assert_equal test_file.size, last_response.headers['Content-Length'].to_i, "Expected Content Length to be #{test_file.size} was #{last_response.headers['Content-Length']}"
     assert last_response.ok?

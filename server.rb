@@ -1,7 +1,6 @@
 require 'sinatra'
 require 'sinatra/streaming'
 require 'mongo'
-require 'pry'
 
 set :client, Mongo::Client.new([ '127.0.0.1:27017' ], :database => 'elearning')
 
@@ -12,7 +11,8 @@ post '/videos' do
     .client
     .database
     .fs(bucket_name: 'videos')
-    .upload_from_stream('video.mp4', video)
+    binding.pry
+    video_id.upload_from_stream('video.mp4', video)
 
   video.close
 

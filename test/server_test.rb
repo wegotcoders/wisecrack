@@ -1,10 +1,6 @@
-ENV['RACK_ENV'] = 'test'
+require 'test_helper'
 
-require_relative '../server.rb'
-require 'test/unit'
-require 'rack/test'
-
-class ServerTest < Test::Unit::TestCase
+class ServerTest < MiniTest::Test
   include Rack::Test::Methods
 
   def app

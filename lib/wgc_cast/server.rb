@@ -15,46 +15,40 @@ post '/videos' do
     401
   elsif File.exists? params[:video_path]
     video = File.new(params[:video_path])
-    video_id = settings
-      .client
-      .database
-      .fs(bucket_name: 'videos')
-      .upload_from_stream('video.mp4', video)
-
-    video.close
-
     content_type :json
-    [201, {}, { video_id: video_id} ]
+    status 201
+    { video_id: bucket.upload_from_stream(File.basename(video), video) }
   else
     404
   end
 end
 
-get '/videos/:id' do
-  fs_bucket = settings.client.database.fs(:fs_name => 'videos')
-  content_length = fs_bucket.find(_id: BSON::ObjectId(params[:id])).first[:length]
+# Streams a video out of grid fs
+# e.g. GET /videos/56e81c9fd855de1e383ce055-512.mp4
+#
+get '/videos/:id-:bitrate.:file_extension' do |id, bitrate, file_extension|
+  video_id = BSON::ObjectId(id)
 
   headers \
-    'Content-Length' => content_length,
-    'Content-Type' => "video/#{params[:file_extension]}"
-
-  @chunk_count = 0
-  @bigger_chunk = ""
+    'Content-Length' => bucket.find(_id: video_id).first[:length],
+    'Content-Type' => "video/#{file_extension}"
 
   stream do |out|
     unless out.closed?
-      begin
-        fs_bucket.open_download_stream(BSON::ObjectId(params[:id])) do |video_stream|
+      # begin
+        bucket.open_download_stream(video_id) do |video_stream|
           video_stream.each do |chunk|
-            @chunk_count += 1
-            @bigger_chunk << chunk
-            if @chunk_count % params[:chunk_factor].to_i == 0 || video_stream.file_info.chunk_size > chunk.size
-              out << @bigger_chunk.to_s
-              @bigger_chunk = ""
-            end
+            normal_bit_rate = chunk.size / 1024 + 1
+            sleep normal_bit_rate / bitrate.to_f
           end
         end
-      end
+      # rescue Ex
+      # end
     end
   end
+end
+
+private
+def bucket
+  @bucket ||= settings.client.database.fs(bucket_name: 'videos')
 end

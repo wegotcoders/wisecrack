@@ -29,23 +29,28 @@ end
 #
 get '/videos/:id-:bitrate.:file_extension' do |id, bitrate, file_extension|
   video_id = BSON::ObjectId(id)
+  video = bucket.find(_id: video_id).first
+
+  halt 404 unless video
 
   headers \
-    'Content-Length' => bucket.find(_id: video_id).first[:length].to_s,
+    'Content-Length' => video[:length].to_s,
     'Content-Type' => "video/#{file_extension}"
 
   stream do |out|
     unless out.closed?
-      # begin
-        bucket.open_download_stream(video_id) do |video_stream|
-          video_stream.each do |chunk|
+      bucket.open_download_stream(video_id) do |video_stream|
+        video_stream.each do |chunk|
+          begin
             out << chunk
-            normal_bit_rate = chunk.size / 1024 + 1
-            sleep normal_bit_rate / bitrate.to_f
+          rescue IOError => e
+            logger.error e.message
           end
+
+          normal_bit_rate = chunk.size / 1024 + 1
+          sleep normal_bit_rate / bitrate.to_f
         end
-      # rescue Ex
-      # end
+      end
     end
   end
 end

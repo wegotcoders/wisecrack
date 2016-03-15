@@ -3,7 +3,7 @@ module Wisecrack::Video
 
   class << self
     def stream_url(mongo_grid_fs_id:, bit_rate: 256, video_encoding: 'mp4')
-      "#{streaming_url}/#{mongo_grid_fs_id}-#{bit_rate}.#{video_encoding}"
+      "#{streaming_host}/#{mongo_grid_fs_id}-#{bit_rate}.#{video_encoding}"
     end
 
     def create(video_path)
@@ -12,22 +12,22 @@ module Wisecrack::Video
       if res.code_type == Net::HTTPCreated
         JSON(res.body)["video_id"]
       else
-        raise UploadException.new("Failed to create with video #{lesson.video_path}")
+        raise UploadException.new("Failed to create with video #{video_path}")
       end
     end
 
     private
     def http_post_to_streaming_server(file_name)
-      req = Net::HTTP::Post.new(streaming_url)
+      req = Net::HTTP::Post.new(streaming_host)
       req.set_form_data('video_path' => file_name)
 
-      res = Net::HTTP.start(streaming_url.hostname, streaming_url.port) do |http|
+      res = Net::HTTP.start(streaming_host.hostname, streaming_host.port) do |http|
         http.request(req)
       end
     end
 
-    def streaming_url
-      URI.parse([Rails.configuration.video_streaming_url, 'videos'].join("/"))
+    def streaming_host
+      URI.parse([Wisecrack.config.wisecrack_host, "videos"].join("/"))
     end
   end
 end

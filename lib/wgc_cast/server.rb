@@ -11,7 +11,9 @@ configure :production do
 end
 
 post '/videos' do
-  if File.exists? params[:video_path]
+  if params[:video_path].nil?
+    401
+  elsif File.exists? params[:video_path]
     video = File.new(params[:video_path])
     video_id = settings
       .client

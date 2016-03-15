@@ -11,18 +11,21 @@ configure :production do
 end
 
 post '/videos' do
-  video = File.open(params[:video_path])
+  if File.exists? params[:video_path]
+    video = File.new(params[:video_path])
+    video_id = settings
+      .client
+      .database
+      .fs(bucket_name: 'videos')
+      .upload_from_stream('video.mp4', video)
 
-  video_id = settings
-    .client
-    .database
-    .fs(bucket_name: 'videos')
-    .upload_from_stream('video.mp4', video)
+    video.close
 
-  video.close
-
-  content_type :json
-  [201, {}, { video_id: video_id} ]
+    content_type :json
+    [201, {}, { video_id: video_id} ]
+  else
+    404
+  end
 end
 
 get '/videos/:id' do

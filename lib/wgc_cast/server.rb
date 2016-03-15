@@ -1,6 +1,7 @@
 require 'sinatra'
 require 'sinatra/streaming'
 require 'mongo'
+require 'json'
 
 configure :development do
   set :client, Mongo::Client.new(['127.0.0.1:27017'], :database => 'wgc_elearning_development')
@@ -17,7 +18,7 @@ post '/videos' do
     video = File.new(params[:video_path])
     content_type :json
     status 201
-    { video_id: bucket.upload_from_stream(File.basename(video), video) }
+    { video_id: bucket.upload_from_stream(File.basename(video), video).to_s }.to_json
   else
     404
   end
@@ -30,7 +31,7 @@ get '/videos/:id-:bitrate.:file_extension' do |id, bitrate, file_extension|
   video_id = BSON::ObjectId(id)
 
   headers \
-    'Content-Length' => bucket.find(_id: video_id).first[:length],
+    'Content-Length' => bucket.find(_id: video_id).first[:length].to_s,
     'Content-Type' => "video/#{file_extension}"
 
   stream do |out|
@@ -38,6 +39,7 @@ get '/videos/:id-:bitrate.:file_extension' do |id, bitrate, file_extension|
       # begin
         bucket.open_download_stream(video_id) do |video_stream|
           video_stream.each do |chunk|
+            out << chunk
             normal_bit_rate = chunk.size / 1024 + 1
             sleep normal_bit_rate / bitrate.to_f
           end

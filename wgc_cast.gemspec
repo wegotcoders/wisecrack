@@ -30,6 +30,8 @@ Gem::Specification.new do |spec|
   spec.add_dependency "sinatra", "~> 1.4"
   spec.add_dependency "sinatra-contrib"
   spec.add_dependency "mongo", ">= 2.2"
+  spec.add_dependency "json"
+  spec.add_dependency "thin"
 
   spec.add_development_dependency "bundler", "~> 1.11"
   spec.add_development_dependency "rake", "~> 10.0"

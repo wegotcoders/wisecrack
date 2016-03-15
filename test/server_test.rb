@@ -9,7 +9,7 @@ class ServerTest < MiniTest::Test
 
   def test_video_upload_to_mongo
     post '/videos', :video_path => 'hr-preview.mp4'
-    assert last_response.status == 201
+    assert_equal last_response.status, 201
     assert !last_response.body.nil?
   end
 
@@ -19,8 +19,8 @@ class ServerTest < MiniTest::Test
     id = last_response.body.match(/'(.*?)'/).captures.last
 
     get "/videos/#{id}", :file_extension => 'mp4', :chunk_factor => 10
-    assert last_response.headers['Content-Type'] == "video/mp4"
-    assert last_response.headers['Content-Length'].to_i == test_file.size, "Expected Content Length to be #{test_file.size} was #{last_response.headers['Content-Length']}"
+    assert_equal last_response.headers['Content-Type'], "video/mp4"
+    assert_equal last_response.headers['Content-Length'].to_i, test_file.size, "Expected Content Length to be #{test_file.size} was #{last_response.headers['Content-Length']}"
     assert last_response.ok?
   end
 end

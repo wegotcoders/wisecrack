@@ -2,7 +2,13 @@ require 'sinatra'
 require 'sinatra/streaming'
 require 'mongo'
 
-set :client, Mongo::Client.new([ '127.0.0.1:27017' ], :database => 'elearning')
+configure :development do
+  set :client, Mongo::Client.new(['127.0.0.1:27017'], :database => 'wgc_elearning_development')
+end
+
+configure :production do
+  set :client, Mongo::Client.new(['127.0.0.1:27017'], :database => 'wgc_elearning_production')
+end
 
 post '/videos' do
   video = File.open(params[:video_path])

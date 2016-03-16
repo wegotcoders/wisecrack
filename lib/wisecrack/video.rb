@@ -27,7 +27,7 @@ module Wisecrack::Video
     end
 
     def streaming_host
-      URI.parse([Wisecrack.config.wisecrack_host, "videos"].join("/"))
+      URI.parse([Wisecrack.current_config.base_host_url, "videos"].join("/"))
     end
   end
 end

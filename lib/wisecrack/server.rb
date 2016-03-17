@@ -41,11 +41,8 @@ get '/videos/:id-:bitrate.:file_extension' do |id, bitrate, file_extension|
     unless out.closed?
       bucket.open_download_stream(video_id) do |video_stream|
         video_stream.each do |chunk|
-          begin
-            out << chunk
-          rescue IOError => e
-            logger.error e.message
-          end
+          out << chunk
+          logger.error e.message
 
           normal_bit_rate = chunk.size / 1024 + 1
           sleep normal_bit_rate / bitrate.to_f

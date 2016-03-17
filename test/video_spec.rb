@@ -1,25 +1,31 @@
-require 'spec_helper'
+require 'test_helper'
 
-describe Video do
-  let(:video)  { Video.new }
-  let(:lesson) { Lesson.make!(:with_video) }
-  let(:track)  { lesson.track }
-
+describe Wisecrack::Video do
   describe 'class methods' do
-    describe 'go_live_with(lesson)' do
+    describe '.create(video_path)' do
       before do
-        stub_request(:post, "#{Rails.configuration.video_streaming_url}/videos").
-        to_return(:status => 201, :body => %{ { "video_id": "56d9a0a449de7775c570f720" } })
+        Wisecrack.config(:development) do |config|
+          config.base_host_url = 'http://localhost:9292'
+        end
 
-        lesson
+        VCR.insert_cassette('Wisecrack::Video')
+
+        @video_id = Wisecrack::Video.create('test/fixtures/mock_upload_file.mp4')
+        @cassette = YAML.load_file('test/cassettes/Wisecrack_Video.yml')
       end
 
-      it 'should prompt the streaming server to store a video in mongo gridfs' do
-        WebMock.should have_requested(:post, "#{Rails.configuration.video_streaming_url}/videos").with(
-          :body => "video_path=#{lesson.video_path_mp4}".gsub(/\//, '%2F')
-        )
+      after do
+        VCR.eject_cassette
+      end
 
-        expect(lesson.video_mongo_id).to eq('56d9a0a449de7775c570f720')
+      it 'creates a new video resource in gridfs' do
+        response_code = @cassette["http_interactions"].first["response"]["status"]["code"].to_i
+        response_code.must_equal(201)
+      end
+
+      it 'returns the mongo id of the newly created video resource' do
+        id_in_response = JSON.parse(@cassette["http_interactions"].first["response"]["body"]["string"])["video_id"]
+        @video_id.must_equal(id_in_response)
       end
     end
   end

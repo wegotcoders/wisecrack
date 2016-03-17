@@ -1,5 +1,7 @@
 # WgcCast
 
+Video streaming with Ruby and Mongo GridFS
+
 ## Installation
 
 Add this line to your application's Gemfile:

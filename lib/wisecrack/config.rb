@@ -15,12 +15,13 @@ module Wisecrack
       end
     end
 
-    def configurations
-      @configuratations ||= {}
-    end
-
     def current_config
       configurations[self.env]
+    end
+
+    private
+    def configurations
+      @configuratations ||= {}
     end
   end
 end

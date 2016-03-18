@@ -1,4 +1,4 @@
-# WgcCast
+# Wisecrack
 
 Video streaming with Ruby and Mongo GridFS
 
@@ -7,7 +7,7 @@ Video streaming with Ruby and Mongo GridFS
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'wgc_cast'
+gem 'wisecrack'
 ```
 
 And then execute:
@@ -16,7 +16,7 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install wgc_cast
+    $ gem install wisecrack
 
 ## Usage
 Boot up your Wisecrack instance:
@@ -55,7 +55,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/wgc_cast. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/wisecrack. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
 
 
 ## License

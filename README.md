@@ -1,15 +1,13 @@
-# WgcCast
+# Wisecrack
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/wgc_cast`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+Video streaming with Ruby and Mongo GridFS
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'wgc_cast'
+gem 'wisecrack'
 ```
 
 And then execute:
@@ -18,11 +16,36 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install wgc_cast
+    $ gem install wisecrack
 
 ## Usage
+Boot up your Wisecrack instance:
 
-TODO: Write usage instructions here
+    $ rackup
+
+Bootstrap the DSL with your Ruby framework:
+
+```ruby
+Wisecrack.config(:development) do |config|
+  config.base_host_url = 'http://localhost:9292'
+end
+
+Wisecrack.config(:production) do |config|
+  config.base_host_url = 'http://video.yourdomain.com'
+end
+```
+
+POST a new video the Wisecrack instance:
+```ruby
+Wisecrack::Video.create(video_path_mp4)
+```
+
+Stream that resource from Wisecrack to your app:
+```erb
+<video controls="controls" preload="auto" width="800">
+  <source src="<%= Wisecrack::Video.stream_url(mongo_grid_fs_id: xxx) %>" type="video/mp4"></source>
+</video>
+```
 
 ## Development
 
@@ -32,10 +55,9 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/wgc_cast. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/wisecrack. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
 
 
 ## License
 
 The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
-

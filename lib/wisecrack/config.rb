@@ -4,26 +4,24 @@ module Wisecrack
   end
 
   class << self
+    attr_accessor :env
+
     def config(env = :development)
+      self.env = env.to_sym
       if block_given?
-        yield configurations[env] = Configuration.new
+        yield configurations[self.env] = Configuration.new
       else
         configurations
       end
     end
 
+    def current_config
+      configurations[self.env]
+    end
+
+    private
     def configurations
       @configuratations ||= {}
-    end
-
-    def current_config
-      configurations[env]
-    end
-
-    attr_writer :env
-
-    def env
-      (@env || ENV['RACK_ENV'] || :development).to_sym
     end
   end
 end

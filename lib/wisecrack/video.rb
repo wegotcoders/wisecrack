@@ -14,6 +14,8 @@ module Wisecrack
         res = Net::HTTP.start(streaming_host.hostname, streaming_host.port) do |http|
           http.request(req)
         end
+
+        res
       end
 
       private

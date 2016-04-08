@@ -8,17 +8,6 @@ module Wisecrack
       end
 
       def create(video_path)
-        res = http_post_to_streaming_server(video_path)
-
-        if res.code_type == Net::HTTPCreated
-          JSON(res.body)["video_id"]
-        else
-          raise UploadError.new("Failed to create with video #{video_path}")
-        end
-      end
-
-      private
-      def http_post_to_streaming_server(file_name)
         req = Net::HTTP::Post.new(streaming_host)
         req.set_form_data('video_path' => file_name)
 
@@ -26,6 +15,8 @@ module Wisecrack
           http.request(req)
         end
       end
+
+      private
 
       def streaming_host
         URI.parse([Wisecrack.current_config.base_host_url, "videos"].join("/"))

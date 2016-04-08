@@ -9,7 +9,7 @@ module Wisecrack
 
       def create(video_path)
         req = Net::HTTP::Post.new(streaming_host)
-        req.set_form_data('video_path' => file_name)
+        req.set_form_data('video_path' => video_path)
 
         res = Net::HTTP.start(streaming_host.hostname, streaming_host.port) do |http|
           http.request(req)

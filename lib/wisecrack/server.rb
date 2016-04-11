@@ -1,3 +1,4 @@
+require 'pry'
 require 'sinatra'
 require 'sinatra/streaming'
 require 'mongo'
@@ -15,6 +16,21 @@ post '/videos' do
   if params[:video_path].nil?
     401
   elsif File.exists? params[:video_path]
+    video = File.new(params[:video_path])
+    content_type :json
+    status 201
+    { video_id: bucket.upload_from_stream(File.basename(video), video).to_s }.to_json
+  else
+    404
+  end
+end
+
+post '/videos_update' do
+  if params[:video_path].nil?
+    401
+  elsif File.exists?(params[:video_path]) && !!params[:previous_id]
+    bucket.delete(BSON::ObjectId(params[:previous_id]))
+
     video = File.new(params[:video_path])
     content_type :json
     status 201

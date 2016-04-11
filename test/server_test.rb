@@ -32,6 +32,29 @@ class ServerTest < MiniTest::Test
     assert_equal last_response.status, 401
   end
 
+  def test_video_update_to_mongo
+    post '/videos', :video_path => 'hr-preview-fast.mp4'
+
+    post(
+      '/videos_update',
+      :video_path => 'hr-preview-fast.mp4',
+      :previous_id => BSON::ObjectId(JSON.parse(last_response.body)["video_id"])
+    )
+
+    assert_equal last_response.status, 201
+    assert !last_response.body.nil?
+  end
+
+  def test_missing_video_file_update_to_mongo
+    post '/videos_update', :video_path => 'nonesuch.mp4'
+    assert_equal last_response.status, 404
+  end
+
+  def test_nil_update_to_mongo
+    post '/videos_update'
+    assert_equal last_response.status, 401
+  end
+
   def test_video_stream
     test_file = File.open('hr-preview-fast.mp4')
     post '/videos', :video_path => test_file.path

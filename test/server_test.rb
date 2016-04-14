@@ -1,5 +1,5 @@
 require 'test_helper'
-require 'pry'
+require 'wisecrack/server'
 
 class ServerTest < MiniTest::Test
   include Rack::Test::Methods

@@ -1,4 +1,4 @@
 require 'wisecrack'
-require 'wisecrack/server'
+require 'wisecrack/api'
 
 run Sinatra::Application

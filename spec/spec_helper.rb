@@ -1,3 +1,4 @@
+require 'wisecrack/api'
 require 'rack/test'
 require 'webmock'
 require 'vcr'

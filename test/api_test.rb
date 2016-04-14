@@ -1,7 +1,7 @@
 require 'test_helper'
-require 'wisecrack/server'
+require 'wisecrack/api'
 
-class ServerTest < MiniTest::Test
+class ApiTest < MiniTest::Test
   include Rack::Test::Methods
 
   def app

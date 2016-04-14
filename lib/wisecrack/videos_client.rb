@@ -1,5 +1,5 @@
 module Wisecrack
-  module Video
+  module VideosClient
     class << self
       def stream_url(mongo_grid_fs_id:, bit_rate: 256, video_encoding: 'mp4')
         "#{streaming_host}/#{mongo_grid_fs_id}-#{bit_rate}.#{video_encoding}"

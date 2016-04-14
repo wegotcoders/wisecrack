@@ -1,4 +1,4 @@
-require "wisecrack/server"
-require "wisecrack/config"
-require "wisecrack/video"
-require "wisecrack/version"
+require 'wisecrack/version'
+require 'wisecrack/config'
+require 'wisecrack/api'
+require 'wisecrack/videos_client'

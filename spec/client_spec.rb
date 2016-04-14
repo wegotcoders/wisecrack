@@ -1,10 +1,8 @@
 require File.expand_path '../spec_helper.rb', __FILE__
 
-describe Wisecrack::VideosClient do
+describe Wisecrack::Client do
   before do
-    Wisecrack.config(:development) do |config|
-      config.base_host_url = 'http://localhost:9292'
-    end
+    Wisecrack.base_host_url = 'http://localhost:9292'
   end
 
   describe '#stream_url' do

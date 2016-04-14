@@ -1,5 +1,5 @@
 module Wisecrack
-  module VideosClient
+  module Client
     class << self
       def stream_url(mongo_grid_fs_id:, bit_rate: 256, video_encoding: 'mp4')
         "#{streaming_host}/#{mongo_grid_fs_id}-#{bit_rate}.#{video_encoding}"
@@ -32,13 +32,13 @@ module Wisecrack
       private
       def streaming_host
         URI.parse(
-          [Wisecrack.current_config.base_host_url, 'videos'].join('/')
+          [Wisecrack.base_host_url, 'videos'].join('/')
         )
       end
 
       def update_url
         URI.parse(
-          [Wisecrack.current_config.base_host_url, 'videos_update'].join('/')
+          [Wisecrack.base_host_url, 'videos_update'].join('/')
         )
       end
     end

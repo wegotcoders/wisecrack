@@ -1,3 +1,3 @@
-require "wisecrack/config"
-require "wisecrack/version"
-require "wisecrack/video"
+require 'wisecrack/version'
+require 'wisecrack/config'
+require 'wisecrack/client'

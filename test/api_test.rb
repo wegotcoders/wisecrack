@@ -1,7 +1,7 @@
 require 'test_helper'
-require 'wisecrack/server'
+require 'wisecrack/api'
 
-class ServerTest < MiniTest::Test
+class ApiTest < MiniTest::Test
   include Rack::Test::Methods
 
   def app
@@ -29,6 +29,29 @@ class ServerTest < MiniTest::Test
 
   def test_nil_upload_to_mongo
     post '/videos'
+    assert_equal last_response.status, 401
+  end
+
+  def test_video_update_to_mongo
+    post '/videos', :video_path => 'hr-preview-fast.mp4'
+
+    post(
+      '/videos_update',
+      :video_path => 'hr-preview-fast.mp4',
+      :previous_id => BSON::ObjectId(JSON.parse(last_response.body)["video_id"])
+    )
+
+    assert_equal last_response.status, 201
+    assert !last_response.body.nil?
+  end
+
+  def test_missing_video_file_update_to_mongo
+    post '/videos_update', :video_path => 'nonesuch.mp4'
+    assert_equal last_response.status, 404
+  end
+
+  def test_nil_update_to_mongo
+    post '/videos_update'
     assert_equal last_response.status, 401
   end
 

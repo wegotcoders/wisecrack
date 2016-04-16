@@ -24,6 +24,21 @@ post '/videos' do
   end
 end
 
+post '/videos_update' do
+  if params[:video_path].nil?
+    401
+  elsif File.exists?(params[:video_path]) && !!params[:previous_id]
+    bucket.delete(BSON::ObjectId(params[:previous_id]))
+
+    video = File.new(params[:video_path])
+    content_type :json
+    status 201
+    { video_id: bucket.upload_from_stream(File.basename(video), video).to_s }.to_json
+  else
+    404
+  end
+end
+
 # Streams a video out of grid fs
 # e.g. GET /videos/56e81c9fd855de1e383ce055-512.mp4
 #

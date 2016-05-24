@@ -1,3 +1,5 @@
+require 'simplecov'
+SimpleCov.start
 require 'wisecrack/api'
 require 'rack/test'
 require 'webmock'

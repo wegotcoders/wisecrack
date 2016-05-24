@@ -9,7 +9,7 @@ class ApiTest < MiniTest::Test
   end
 
   def setup
-    File.open('hr-preview-fast.mp4', 'w') {|f| f.write "hello" }
+    File.open('hr-preview-fast.mp4', 'w') { |f| f.write "hello" }
   end
 
   def teardown
